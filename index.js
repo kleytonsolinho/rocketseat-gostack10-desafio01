@@ -68,6 +68,17 @@ server.post('/projects', (req, res) => {
   return res.json({ projects });
 });
 
+//create new task
+
+server.post('/projects/:index', CheckProjectInArray, (req, res) => {
+  const { index } = req.params;
+  const { task } = req.body;
+
+  projects[index].task.push(task);
+
+  return res.json({ projects });
+});
+
 //update project
 
 server.put('/projects/:index', CheckProjectInArray, CheckEditNameProject, (req, res) => {
