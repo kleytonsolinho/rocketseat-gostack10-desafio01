@@ -13,14 +13,6 @@ server.use((req, res, next) => {
   console.timeEnd('Time Request');
 });
 
-function CheckProjectList(req, res, next) {
-  if (!req.params.projects) {
-    return res.status(400).json({ error: 'Projects list is empty!' });
-  }
-
-  return next();
-}
-
 function CheckProjectInArray(req, res, next) {
   if (!projects[req.params.index]) {
     return res.status(400).json({ error: 'Projects does not exist!' });
@@ -30,8 +22,6 @@ function CheckProjectInArray(req, res, next) {
 }
 
 server.get('/projects', (req, res) => {
-  //console.log("Funcionando");
-
   return res.json(projects);
 })
 
@@ -49,6 +39,23 @@ server.post('/projects', (req, res) => {
   projects.push(id);
   projects.push(title);
   projects.push(task);
+
+  return res.json(projects);
+});
+
+server.put('/projects/:index', CheckProjectInArray, (req, res) => {
+  const { index } = req.params;
+  const { title } = req.body;
+
+  projects[index] = title;
+
+  return res.json(projects);
+});
+
+server.delete('/projects/:index', CheckProjectInArray, (req, res) => {
+  const { index } = req.params;
+
+  projects.splice(index, 1);
 
   return res.json(projects);
 });
